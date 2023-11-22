@@ -163,10 +163,11 @@ public static int open=0;
         }
     }//GEN-LAST:event_menuExitMouseClicked
 
-    // xem toàn bộ question
+    // xem toàn bộ question (done)
     private void menuAllQuestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAllQuestionMouseClicked
         // TODO add your handling code here:
         if(open==0){
+//            System.out.println("com.quizapplication.AdminHome.menuAllQuestionMouseClicked()");
             new allQuestion().setVisible(true);
             open=1;
         }

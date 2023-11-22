@@ -21,7 +21,8 @@ public class Client {
     private DataOutputStream out;
     private DataInputStream in;
     public static int StudentInfoNum = 5;
-    
+    public static int QuestionInfoNum = 7;
+
     public Client(int port){
         this.port = port;
         this.execute();
@@ -72,6 +73,30 @@ public class Client {
                 String[] data = new String[Client.StudentInfoNum];
                 //read info of each student
                 for (int j = 0; j < StudentInfoNum; j++) {
+                    data[j] = in.readUTF();
+                }
+                
+                result.add(data);
+            }
+        } catch (Exception e) {
+        }
+        
+        return result;
+    }
+    
+    public ArrayList<String[]> getAllQuestion(){
+        ArrayList<String[]> result = new ArrayList<>(1000);
+        String request = "getAllQuestions";
+        try {
+            out.writeUTF(request);
+//            out.writeUTF(String.valueOf(mark));
+//            Get the number of question;
+            int QuestionNum = Integer.parseInt(in.readUTF());
+            
+            for (int i = 0; i < QuestionNum; i++) {
+                String[] data = new String[Client.QuestionInfoNum];
+                //read info of each student
+                for (int j = 0; j < Client.QuestionInfoNum; j++) {
                     data[j] = in.readUTF();
                 }
                 

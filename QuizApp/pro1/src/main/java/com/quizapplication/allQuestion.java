@@ -1,6 +1,7 @@
 package com.quizapplication;
 
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /*
@@ -14,39 +15,55 @@ import javax.swing.table.DefaultTableModel;
  */
 public class allQuestion extends javax.swing.JFrame {
  DefaultTableModel model ;
+ ArrayList<String[]> Questions;
+
     /**
      * Creates new form allQuestion
      */
  
-    // tao sk va lay du lieu o day
+ 
+ // tao sk va lay du lieu o day
     public allQuestion() {
         initComponents();
         try{
-            Connection conn=ConnectionJDBC.getConn();
-            Statement statement=conn.createStatement();
-            ResultSet rs=statement.executeQuery("select * from question");
-       model = new DefaultTableModel(new Object[]{"ID", "Question", "Option 1","Option 2","Option 3","Option 4","Answer"}, 0);
-//            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-                    jTable1.setModel(model);
-            while (rs.next()) {
-                String id = rs.getString("ID");
-		String name = rs.getString("Name");
-		String op1=rs.getString("Opt1");
-		String op2 = rs.getString("Opt2");
-		String op3 = rs.getString("Opt3");
-                String op4 = rs.getString("Opt4");
-                String ans = rs.getString("Answer");
-		model.addRow(new Object[]{id, name, op1,op2,op3,op4,ans});
-				}
-            rs.close();
-            statement.close();
-            conn.close();
+            System.out.println("question1");
+            Questions = Main.client.getAllQuestion();
+            System.out.println("herrrreee");
+//            int x = 0;
+//            for (String[] question : Questions) {
+//                x++;
+//                System.out.println("ID  : "  + x);
+//                for (String element : question) {
+//                    System.out.println(element);
+//                }
+//                System.out.println();
+//            }
+            
+            model = new DefaultTableModel(new Object[]{"ID", "Name", "Opt1", "Opt2", "Opt3", "Opt4", "Answer"}, 0);
+            jTable1.setModel(model);
+            
+            int x = 0;
+            for (String[] QuestionData: Questions) {
+//                x++;
+//                System.out.println("ID  : "  + x);
+//
+//                System.out.println(QuestionData[0]);
+//                System.out.println(QuestionData[1]);
+//                System.out.println(QuestionData[2]);                
+//                System.out.println(QuestionData[3]);                
+//                System.out.println(QuestionData[4]);                
+//                System.out.println(QuestionData[5]);                
+//                System.out.println(QuestionData[6]);                
+//                System.out.println("  ");                
+                
+                model.addRow(new Object[]{QuestionData[0], QuestionData[1], QuestionData[2], QuestionData[3], QuestionData[4], QuestionData[5], QuestionData[6] });
+            }   
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,e);
         }
         
     }
-
+          
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

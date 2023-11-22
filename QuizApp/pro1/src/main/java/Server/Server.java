@@ -9,6 +9,7 @@ import com.quizapplication.ConnectionJDBC;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
@@ -121,7 +122,73 @@ class ClientHandler implements Runnable{
         } catch (Exception e) {
         }
     }
-
+     public void getAllQuestions(){
+        try {
+            String[] datas = new String[Client.QuestionInfoNum];
+//            String marks = in.readUTF();
+            System.out.println("server ");
+            
+            Connection conn  = new ConnectionJDBC().getConn();
+            Statement  st = conn.createStatement();
+            ResultSet  rs = st.executeQuery("select * from question");
+            // Number of Question
+            rs.last();
+            out.writeUTF(String.valueOf(rs.getRow()));
+            rs.beforeFirst();
+            
+            while (rs.next()) {
+                datas[0] = rs.getString("ID");
+                datas[1] = rs.getString("Name");
+                datas[2] = rs.getString("Opt1");
+                datas[3] = rs.getString("Opt2");
+                datas[4] = rs.getString("Opt3");
+                datas[5] = rs.getString("Opt4");
+                datas[6] = rs.getString("Answer");
+                
+                out.writeUTF(datas[0]);
+                out.writeUTF(datas[1]);
+                out.writeUTF(datas[2]);
+                out.writeUTF(datas[3]);
+                out.writeUTF(datas[4]);
+                out.writeUTF(datas[5]);
+                out.writeUTF(datas[6]);
+            
+            }  
+           conn.close();
+           st.close();
+           rs.close();
+        } catch (Exception e) {
+        }
+    }
+     
+//    public void GetAllQuestion() {
+//        try {
+//            Connection conn = ConnectionJDBC.getConn();
+//            Statement statement = conn.createStatement();
+//            ResultSet rs = statement.executeQuery("select * from question");
+//
+//            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+//            while (rs.next()) {
+//                String id = rs.getString("ID");
+//                String name = rs.getString("Name");
+//                String op1 = rs.getString("Opt1");
+//                String op2 = rs.getString("Opt2");
+//                String op3 = rs.getString("Opt3");
+//                String op4 = rs.getString("Opt4");
+//                String ans = rs.getString("Answer");
+//                oos.writeObject(new Object[] {id, name, op1, op2, op3, op4, ans});
+//            }
+//            
+//            rs.close();
+//            statement.close();
+//            conn.close();
+//            oos.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//    
+    
     @Override
     public void run(){
         try {
@@ -131,6 +198,9 @@ class ClientHandler implements Runnable{
             while(true){
                 //Nhận dữ liệu từ client
                 String clientRequest = in.readUTF();
+                if(clientRequest != null) {
+                    System.out.println(clientRequest);
+                }
                 switch (clientRequest) {
                     case "postStudent":
                         postStudent();
@@ -138,6 +208,10 @@ class ClientHandler implements Runnable{
                     case "getAllStudents":
                         getAllStudents();
                         break;
+                    case "getAllQuestions":
+                        getAllQuestions();
+                        break;
+          
                     default:
                         throw new AssertionError();
                 }
