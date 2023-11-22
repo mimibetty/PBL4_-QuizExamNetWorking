@@ -10,13 +10,15 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author ACER
+  z* @author ACER
  */
 public class allQuestion extends javax.swing.JFrame {
  DefaultTableModel model ;
     /**
      * Creates new form allQuestion
      */
+ 
+    // tao sk va lay du lieu o day
     public allQuestion() {
         initComponents();
         try{

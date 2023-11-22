@@ -113,6 +113,7 @@ public class LoginAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogin1ActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // khúc này cần check lại tài khoản admin từ csdl
         if(fieldUsername.getText().equals("admin") && fieldPassword.getText().equals("123456")){
             new AdminHome().setVisible(true);
         }else{

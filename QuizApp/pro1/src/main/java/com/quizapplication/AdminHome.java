@@ -140,6 +140,8 @@ public static int open=0;
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    // đăng xuất log out
     private void menuLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuLogoutMouseClicked
         JFrame fr=new JFrame();
         fr.setAlwaysOnTop(true);
@@ -151,6 +153,7 @@ public static int open=0;
         
     }//GEN-LAST:event_menuLogoutMouseClicked
 
+    // thoát chương trình, exit
     private void menuExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuExitMouseClicked
         JFrame fr=new JFrame();
         fr.setAlwaysOnTop(true);
@@ -160,6 +163,7 @@ public static int open=0;
         }
     }//GEN-LAST:event_menuExitMouseClicked
 
+    // xem toàn bộ question
     private void menuAllQuestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAllQuestionMouseClicked
         // TODO add your handling code here:
         if(open==0){
@@ -167,6 +171,7 @@ public static int open=0;
             open=1;
         }
         else{
+            // nếu đã mở form rồi thì tạo 1 jframe và thông báo đã mở
             JFrame jf=new JFrame();
             jf.setAlwaysOnTop(true);
             JOptionPane.showMessageDialog(jf,"One Form is already exist");
