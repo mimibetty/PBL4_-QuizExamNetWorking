@@ -1,9 +1,11 @@
 package com.quizapplication;
 
 import java.sql.*;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -170,25 +172,28 @@ public class deleteQuestion extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        try{
-              String id=jTextField1.getText();
-            Connection connection=ConnectionJDBC.getConn();
-            PreparedStatement ps=connection.prepareStatement("delete from question where id=?");
-            ps.setString(1, id);
-            ps.executeUpdate();
-            JFrame jf=new JFrame();
+        String id = jTextField1.getText();
+        boolean ok1 = Main.client.IsIDExist(id);
+        if (id.isEmpty() == false && ok1) {
+            boolean ok = Main.client.DeleteQuestion(id);
+            if (ok) {
+                JFrame jf = new JFrame();
+                jf.setAlwaysOnTop(true);
+                JOptionPane.showMessageDialog(jf, "Successfully Delete");
+                setVisible(false);
+                new deleteQuestion().setVisible(true);
+//                resetID();
+                Main.client.ResetIDDelete();
+            } else {
+                JFrame jf = new JFrame();
+                jf.setAlwaysOnTop(true);
+                JOptionPane.showMessageDialog(jf, "delete fail");
+
+            }
+        } else {
+            JFrame jf = new JFrame();
             jf.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(jf,"Successfully Delete");
-            setVisible(false);
-            new deleteQuestion().setVisible(true);
-            connection.close();
-            ps.close();
-             resetID();
-            
-        }catch(Exception e){
-            JFrame jf=new JFrame();
-            jf.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(jf, e);
+            JOptionPane.showMessageDialog(jf, "id is empty or not exist");
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -198,87 +203,77 @@ public class deleteQuestion extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        AdminHome.open=0;
+        AdminHome.open = 0;
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String id=jTextField1.getText();
-        try{
-            Connection conn=ConnectionJDBC.getConn();
-            Statement statement=conn.createStatement();
-            ResultSet rs=statement.executeQuery("select * from question where id='"+id+"'");
-            if(rs.first()){
-                jTextField2.setText(rs.getString(2));
-                jTextField3.setText(rs.getString(3));
-                jTextField4.setText(rs.getString(4));
-                jTextField5.setText(rs.getString(5));
-                jTextField6.setText(rs.getString(6));
-                jTextField7.setText(rs.getString(7));
-                jTextField1.setEditable(false);
-            }
-            else{
-                JFrame jf=new JFrame();
-                jf.setAlwaysOnTop(true);
-                JOptionPane.showMessageDialog(jf,"Question Id does not Exist");
-            }
-            statement.close();
-            conn.close();
-            rs.close();
-        }catch(Exception e){
-             JFrame jf=new JFrame();
-                jf.setAlwaysOnTop(true);
-                JOptionPane.showMessageDialog(jf,e);
+        String id = jTextField1.getText();
+        boolean ok = Main.client.IsIDExist(id);
+        if (id.isEmpty() == false && ok) {
+            List<String> result = Main.client.SearchQuestionAtID(id);
+            jTextField2.setText(result.get(1));
+            jTextField3.setText(result.get(2));
+            jTextField4.setText(result.get(3));
+            jTextField5.setText(result.get(4));
+            jTextField6.setText(result.get(5));
+            jTextField7.setText(result.get(6));
+            jTextField1.setEditable(false);
+        } else {
+            JFrame jf = new JFrame();
+            jf.setAlwaysOnTop(true);
+            JOptionPane.showMessageDialog(jf, "id is empty or not exist");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-         jTextField2.setText("");
-                jTextField3.setText("");
-                jTextField4.setText("");
-                jTextField5.setText("");
-                jTextField6.setText("");
-                jTextField7.setText("");
-                jTextField1.setText("");
-                jTextField1.setEditable(true);
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        jTextField7.setText("");
+        jTextField1.setText("");
+        jTextField1.setEditable(true);
     }//GEN-LAST:event_jButton5ActionPerformed
-   
-    private void resetID(){
-         try{
-            Connection conn=ConnectionJDBC.getConn();
-            Statement statement=conn.createStatement();
-            ResultSet rs=statement.executeQuery("select Id from question; ");
-            int id=1;
-             while (rs.next()) {
-                int old=rs.getInt("ID");
-                if(old!=id){
-                     UpdateID(old, id);
+
+    private void resetID() {
+        try {
+            Connection conn = ConnectionJDBC.getConn();
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery("select Id from question; ");
+            int id = 1;
+            while (rs.next()) {
+                int old = rs.getInt("ID");
+                if (old != id) {
+                    UpdateID(old, id);
                 }
                 id++;
             }
             statement.close();
             conn.close();
             rs.close();
-        }catch(Exception e){
-             JFrame jf=new JFrame();
-                jf.setAlwaysOnTop(true);
-                JOptionPane.showMessageDialog(jf,e);
+        } catch (Exception e) {
+            JFrame jf = new JFrame();
+            jf.setAlwaysOnTop(true);
+            JOptionPane.showMessageDialog(jf, e);
         }
     }
-    private void UpdateID(int old,int news){
-         try{
-            Connection conn=ConnectionJDBC.getConn();
-            PreparedStatement statement=conn.prepareStatement("UPDATE question SET ID=? where ID=?;");
-            statement.setInt(1,news);
-            statement.setInt(2,old);
-           int rowsAffected = statement.executeUpdate();
+
+    private void UpdateID(int old, int news) {
+        try {
+            Connection conn = ConnectionJDBC.getConn();
+            PreparedStatement statement = conn.prepareStatement("UPDATE question SET ID=? where ID=?;");
+            statement.setInt(1, news);
+            statement.setInt(2, old);
+            int rowsAffected = statement.executeUpdate();
             statement.close();
             conn.close();
-        }catch(Exception e){
-             JFrame jf=new JFrame();
-                jf.setAlwaysOnTop(true);
-                JOptionPane.showMessageDialog(jf,e);
+        } catch (Exception e) {
+            JFrame jf = new JFrame();
+            jf.setAlwaysOnTop(true);
+            JOptionPane.showMessageDialog(jf, e);
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -114,7 +114,7 @@ public class LoginAdmin extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // khúc này cần check lại tài khoản admin từ csdl
-        if(fieldUsername.getText().equals("admin") && fieldPassword.getText().equals("123456")){
+        if(fieldUsername.getText().equals("admin") && fieldPassword.getText().equals("1")){
             new AdminHome().setVisible(true);
         }else{
             ImageIcon icon=new ImageIcon(getClass().getResource("/image/Incorrect Password.png"));

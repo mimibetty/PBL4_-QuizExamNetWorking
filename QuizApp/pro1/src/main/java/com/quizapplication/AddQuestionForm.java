@@ -4,7 +4,6 @@ package com.quizapplication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Admin
@@ -12,6 +11,7 @@ package com.quizapplication;
 import java.sql.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 public class AddQuestionForm extends javax.swing.JFrame {
 
     /**
@@ -20,19 +20,17 @@ public class AddQuestionForm extends javax.swing.JFrame {
     public AddQuestionForm() {
         initComponents();
         try {
-            Connection con=ConnectionJDBC.getConn();
-            Statement statement=con.createStatement();
-            ResultSet rs=statement.executeQuery("Select count(id) from question");
-            if(rs.first()){
-                int id=rs.getInt(1);
-                id=id+1;
-                String str=String.valueOf(id);
+            int numberQuestion = Main.client.getNumberQuestion();
+            if (numberQuestion > 0) {
+                int id = numberQuestion;
+                id = id + 1;
+                String str = String.valueOf(id);
                 labelId.setText(str);
-            }else{
+            } else {
                 labelId.setText("1");
             }
         } catch (Exception e) {
-            JFrame fr=new JFrame();
+            JFrame fr = new JFrame();
             fr.setAlwaysOnTop(true);
             JOptionPane.showMessageDialog(fr, e);
         }
@@ -183,32 +181,32 @@ public class AddQuestionForm extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         String id = labelId.getText();
-        String question= fieldQuestion.getText();
-        String opt1=fieldOpt1.getText();
-        String opt2=fieldOpt2.getText();
-        String opt3=fieldOpt3.getText();
-        String opt4=fieldOpt4.getText();
-        String answer=fieldAnswer.getText();
-        try {
-            Connection con=ConnectionJDBC.getConn();
-            PreparedStatement statement=con.prepareStatement("insert into question values(?,?,?,?,?,?,?)");
-            statement.setString(1,id);
-            statement.setString(2,question);
-            statement.setString(3,opt1);
-            statement.setString(4,opt2);
-            statement.setString(5,opt3);
-            statement.setString(6,opt4);
-            statement.setString(7,answer);
-            statement.executeUpdate();
-            JFrame frame=new JFrame();
+        String question = fieldQuestion.getText();
+        String opt1 = fieldOpt1.getText();
+        String opt2 = fieldOpt2.getText();
+        String opt3 = fieldOpt3.getText();
+        String opt4 = fieldOpt4.getText();
+        String answer = fieldAnswer.getText();
+
+        String[] datas = new String[7];
+        datas[0] = id;
+        datas[1] = question;
+        datas[2] = opt1;
+        datas[3] = opt2;
+        datas[4] = opt3;
+        datas[5] = opt4;
+        datas[6] = answer;
+        boolean ok = Main.client.AddQuestion(datas);
+        if (ok) {
+            JFrame frame = new JFrame();
             frame.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(frame,"Cập nhật thành công!");
+            JOptionPane.showMessageDialog(frame, "Cập nhật thành công!");
             setVisible(false);
             new AddQuestionForm().setVisible(true);
-        } catch (Exception e) {
-            JFrame frame=new JFrame();
+        } else {
+            JFrame frame = new JFrame();
             frame.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(frame,e);
+            JOptionPane.showMessageDialog(frame, "NOOOOO");
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -223,7 +221,7 @@ public class AddQuestionForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        AdminHome.open=0;
+        AdminHome.open = 0;
         setVisible(false);
     }//GEN-LAST:event_btnCloseActionPerformed
 

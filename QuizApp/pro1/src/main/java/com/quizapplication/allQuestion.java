@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -11,59 +12,33 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
-  z* @author ACER
+ * z* @author ACER
  */
 public class allQuestion extends javax.swing.JFrame {
- DefaultTableModel model ;
- ArrayList<String[]> Questions;
+
+    DefaultTableModel model;
+    ArrayList<String[]> Questions;
 
     /**
      * Creates new form allQuestion
      */
- 
- 
- // tao sk va lay du lieu o day
+    // tao sk va lay du lieu o day
     public allQuestion() {
         initComponents();
-        try{
-            System.out.println("question1");
+        try {
             Questions = Main.client.getAllQuestion();
-            System.out.println("herrrreee");
-//            int x = 0;
-//            for (String[] question : Questions) {
-//                x++;
-//                System.out.println("ID  : "  + x);
-//                for (String element : question) {
-//                    System.out.println(element);
-//                }
-//                System.out.println();
-//            }
-            
             model = new DefaultTableModel(new Object[]{"ID", "Name", "Opt1", "Opt2", "Opt3", "Opt4", "Answer"}, 0);
             jTable1.setModel(model);
-            
+
             int x = 0;
-            for (String[] QuestionData: Questions) {
-//                x++;
-//                System.out.println("ID  : "  + x);
-//
-//                System.out.println(QuestionData[0]);
-//                System.out.println(QuestionData[1]);
-//                System.out.println(QuestionData[2]);                
-//                System.out.println(QuestionData[3]);                
-//                System.out.println(QuestionData[4]);                
-//                System.out.println(QuestionData[5]);                
-//                System.out.println(QuestionData[6]);                
-//                System.out.println("  ");                
-                
-                model.addRow(new Object[]{QuestionData[0], QuestionData[1], QuestionData[2], QuestionData[3], QuestionData[4], QuestionData[5], QuestionData[6] });
-            }   
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null,e);
+            for (String[] QuestionData : Questions) {
+                model.addRow(new Object[]{QuestionData[0], QuestionData[1], QuestionData[2], QuestionData[3], QuestionData[4], QuestionData[5], QuestionData[6]});
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
-        
     }
-          
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,7 +102,7 @@ public class allQuestion extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        AdminHome.open=0;
+        AdminHome.open = 0;
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 

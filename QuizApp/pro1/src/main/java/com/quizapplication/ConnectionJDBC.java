@@ -18,7 +18,8 @@ public class ConnectionJDBC {
 
     public static Connection getConn() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+//            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             // connnect to database 'quiz'
             Connection conn = getConnection(DB_URL, USER_NAME, PASSWORD);
             System.out.println("Connection to DB successfull");
@@ -35,7 +36,8 @@ public class ConnectionJDBC {
             String password) {
         Connection conn = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+//            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(dbURL, userName, password);
             System.out.println("connect successfully!");
         } catch (ClassNotFoundException | SQLException ex) {

@@ -195,7 +195,7 @@ public static int open=0;
             JOptionPane.showMessageDialog(jf,"One Form is already exist");
         }
     }//GEN-LAST:event_menuDeleteQuestionMouseClicked
-
+    // thêm vào câu hỏi
     private void menuAddQuestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAddQuestionMouseClicked
         // TODO add your handling code here:
           if(open==0){
@@ -207,7 +207,8 @@ public static int open=0;
             JOptionPane.showMessageDialog(frame, "Đã tồn tại một cửa sổ khác làm phiềm đóng cửa sổ trước đó");
         }
     }//GEN-LAST:event_menuAddQuestionMouseClicked
-
+    
+    // update form 
     private void menuUpdateQuestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuUpdateQuestionMouseClicked
         // TODO add your handling code here:
          if(open==0){

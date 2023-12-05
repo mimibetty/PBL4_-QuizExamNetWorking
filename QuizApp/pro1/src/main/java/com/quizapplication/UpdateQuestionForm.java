@@ -4,12 +4,13 @@ package com.quizapplication;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Admin
  */
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -176,33 +177,43 @@ public class UpdateQuestionForm extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         String id = fieldId.getText();
-        String question = fieldQuestion.getText();
-        String opt1 = fieldOpt1.getText();
-        String opt2 = fieldOpt2.getText();
-        String opt3 = fieldOpt3.getText();
-        String opt4 = fieldOpt4.getText();
-        String answer = fieldAnswer.getText();
-        try {
-            Connection con = ConnectionJDBC.getConn();
-            PreparedStatement statement = con.prepareStatement("update question set name=?,opt1=?,opt2=?,opt3=?,opt4=?,answer=? where id=?");
-            statement.setString(7, id);
-            statement.setString(1, question);
-            statement.setString(2, opt1);
-            statement.setString(3, opt2);
-            statement.setString(4, opt3);
-            statement.setString(5, opt4);
-            statement.setString(6, answer);
-            statement.executeUpdate();
-            JFrame frame = new JFrame();
-            frame.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(frame, "Cập nhật thành công!");
-            setVisible(false);
-            new UpdateQuestionForm().setVisible(true);
-        } catch (Exception e) {
-            JFrame frame = new JFrame();
-            frame.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(frame, e);
+        boolean exist = Main.client.IsIDExist(id);
+        if (id.isEmpty() != true && exist) {
+            String question = fieldQuestion.getText();
+            String opt1 = fieldOpt1.getText();
+            String opt2 = fieldOpt2.getText();
+            String opt3 = fieldOpt3.getText();
+            String opt4 = fieldOpt4.getText();
+            String answer = fieldAnswer.getText();
+
+            String[] datas = new String[7];
+            datas[0] = id;
+            datas[1] = question;
+            datas[2] = opt1;
+            datas[3] = opt2;
+            datas[4] = opt3;
+            datas[5] = opt4;
+            datas[6] = answer;
+            boolean ok = Main.client.UpdateQuestion(datas);
+            if (ok) {
+                JFrame frame = new JFrame();
+                frame.setAlwaysOnTop(true);
+                JOptionPane.showMessageDialog(frame, "Cập nhật thành công hehe !");
+                setVisible(false);
+                new UpdateQuestionForm().setVisible(true);
+            } else {
+                JFrame frame = new JFrame();
+                frame.setAlwaysOnTop(true);
+                JOptionPane.showMessageDialog(frame, "NOOOO Update");
+            }
+
+        } else {
+            JFrame jf = new JFrame();
+            jf.setAlwaysOnTop(true);
+            JOptionPane.showMessageDialog(jf, "id is empty or not exist");
+
         }
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
@@ -220,31 +231,25 @@ public class UpdateQuestionForm extends javax.swing.JFrame {
         setVisible(false);
     }//GEN-LAST:event_btnCloseActionPerformed
 
-    
-    
-    
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String id = fieldId.getText();
-        try {
-            Connection con = ConnectionJDBC.getConn();
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery("select * from question where id='" + id + "'");
-            if (rs.first()) {
-                fieldQuestion.setText(rs.getString(2));
-                fieldOpt1.setText(rs.getString(3));
-                fieldOpt2.setText(rs.getString(4));
-                fieldOpt3.setText(rs.getString(5));
-                fieldOpt4.setText(rs.getString(6));
-                fieldAnswer.setText(rs.getString(7));
-            } else {
-                JFrame frame = new JFrame();
-                frame.setAlwaysOnTop(true);
-                JOptionPane.showMessageDialog(frame, "Không tìm thấy câu hỏi có mã : "+id);
-            }
-        } catch (Exception e) {
+        boolean ok = Main.client.IsIDExist(id);
+        if (id.isEmpty() == false && ok) {
+            List<String> result = Main.client.SearchQuestionAtID(id);
+            fieldQuestion.setText(result.get(1));
+            fieldOpt1.setText(result.get(2));
+            fieldOpt2.setText(result.get(3));
+            fieldOpt3.setText(result.get(4));
+            fieldOpt4.setText(result.get(5));
+            fieldAnswer.setText(result.get(6));
+
+        } else {
+            JFrame jf = new JFrame();
+            jf.setAlwaysOnTop(true);
+            JOptionPane.showMessageDialog(jf, "id is empty or not exist");
+
         }
     }//GEN-LAST:event_btnSearchActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
