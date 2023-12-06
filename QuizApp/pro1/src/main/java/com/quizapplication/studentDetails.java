@@ -172,7 +172,7 @@ public class studentDetails extends javax.swing.JFrame {
         datas[2] = Address.getText();
         datas[3] = (String) Gender.getSelectedItem();
         datas[4] = "0";
-        if(Main.client.postStudent(datas)){
+        if(QuizApplication.client.postStudent(datas)){
 //            Connection conn = ConnectionJDBC.getConn();
 //            PreparedStatement ps = conn.prepareStatement("insert into student values(?,?,?,?,?)");
 //            ps.setString(1, datas[0]);

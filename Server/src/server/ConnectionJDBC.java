@@ -1,4 +1,4 @@
-package com.quizapplication;
+package server;
 
 
 

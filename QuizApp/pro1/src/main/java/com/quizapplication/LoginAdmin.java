@@ -113,8 +113,24 @@ public class LoginAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogin1ActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if(fieldUsername.getText().equals("admin") && fieldPassword.getText().equals("123456")){
-            new AdminHome().setVisible(true);
+        String username = fieldUsername.getText();
+        String password = fieldPassword.getText();
+        if(QuizApplication.client.login(username, password)){
+//            Runnable runnable = new Runnable() {
+//                public void run() {
+                    if(QuizApplication.client.role == 0){
+                        new AdminHome().setVisible(true);
+                    }
+                    else{
+                        new quizExamStudent(QuizApplication.client.MSSV).setVisible(true);
+                    }            
+                    this.setVisible(false);
+//                }
+//            };
+//
+//            Thread thread = new Thread(runnable);
+//            thread.start();
+            
         }else{
             ImageIcon icon=new ImageIcon(getClass().getResource("/image/Incorrect Password.png"));
             JOptionPane.showMessageDialog(null, "<html><b style=\"color: red; font-size: 10px\">Incorrect <br> Username or Password</b></html>","Show",JOptionPane.INFORMATION_MESSAGE,icon);

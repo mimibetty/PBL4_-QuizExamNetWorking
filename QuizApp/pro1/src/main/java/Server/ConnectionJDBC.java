@@ -1,4 +1,4 @@
-package com.quizapplication;
+package Server;
 
 
 
@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 public class ConnectionJDBC {
 
-    public static String DB_URL = "jdbc:mysql://localhost:3306/quiz?useSSL=false";
+    public static String DB_URL = "jdbc:mysql://localhost:3306/new_quiz?useSSL=false";
 //    public static String url="jdbc:mysql://127.0.0.1:3306/quiz";
     public static String USER_NAME = "root";
     public static String PASSWORD = "142857SONlun@@";

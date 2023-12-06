@@ -1,5 +1,6 @@
 package com.quizapplication;
 
+import Server.ConnectionJDBC;
 import java.sql.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

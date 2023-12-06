@@ -7,6 +7,7 @@ Server\ClientHandler.class
 com\quizapplication\AdminHome$7.class
 com\quizapplication\deleteQuestion$1.class
 com\quizapplication\quizExamStudent$6.class
+Server\ConnectionJDBC.class
 com\quizapplication\AdminHome.class
 com\quizapplication\quizExamStudent$3.class
 com\quizapplication\UpdateQuestionForm$3.class
@@ -39,7 +40,6 @@ com\quizapplication\Main$3.class
 com\quizapplication\quizExamStudent$1.class
 com\quizapplication\LoginAdmin$3.class
 com\quizapplication\AdminHome$8.class
-com\quizapplication\ConnectionJDBC.class
 com\quizapplication\AdminHome$5.class
 com\quizapplication\Client.class
 com\quizapplication\AdminHome$4.class

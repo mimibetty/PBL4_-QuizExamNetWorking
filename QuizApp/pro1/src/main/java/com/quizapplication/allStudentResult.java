@@ -27,12 +27,12 @@ public class allStudentResult extends javax.swing.JFrame {
     public allStudentResult() {
         initComponents();
         try {        
-            students = Main.client.getAllStudents(0);
-            model = new DefaultTableModel(new Object[]{"rollNo", "name", "gender", "address", "marks"}, 0);
+            students = QuizApplication.client.getAllStudentsByMark(0);
+            model = new DefaultTableModel(new Object[]{"Name", "MSSV", "LSH", "Mark", "Number_Error", "Detecting_Error"}, 0);
             jTable1.setModel(model);
                         
             for (String[] studentInfo: students) {
-                model.addRow(new Object[]{studentInfo[0], studentInfo[1], studentInfo[2], studentInfo[3], studentInfo[4] });
+                model.addRow(new Object[]{studentInfo[0], studentInfo[1], studentInfo[2], studentInfo[3], studentInfo[4], studentInfo[5] });
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e);
@@ -129,7 +129,7 @@ public class allStudentResult extends javax.swing.JFrame {
             marks = Integer.parseInt(jTextField1.getText());
         }
         try {
-            students = Main.client.getAllStudents(marks);            
+            students = QuizApplication.client.getAllStudentsByMark(marks);            
             model = new DefaultTableModel(new Object[]{"rollNo", "name", "gender", "address", "marks"}, 0);
             jTable1.setModel(model);
 
