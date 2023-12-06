@@ -1,4 +1,4 @@
-package com.quizapplication;
+package Server;
 
 
 
@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 public class ConnectionJDBC {
 
-    public static String DB_URL = "jdbc:mysql://localhost:3306/quiz?useSSL=false";
+    public static String DB_URL = "jdbc:mysql://localhost:3306/new_quiz?useSSL=false";
 //    public static String url="jdbc:mysql://127.0.0.1:3306/quiz";
     public static String USER_NAME = "root";
     public static String PASSWORD = "";
@@ -18,7 +18,6 @@ public class ConnectionJDBC {
 
     public static Connection getConn() {
         try {
-//            Class.forName("com.mysql.jdbc.Driver");
             Class.forName("com.mysql.cj.jdbc.Driver");
             // connnect to database 'quiz'
             Connection conn = getConnection(DB_URL, USER_NAME, PASSWORD);
@@ -36,7 +35,6 @@ public class ConnectionJDBC {
             String password) {
         Connection conn = null;
         try {
-//            Class.forName("com.mysql.jdbc.Driver");
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(dbURL, userName, password);
             System.out.println("connect successfully!");
@@ -46,34 +44,34 @@ public class ConnectionJDBC {
         return conn;
     }
     
-    public static void main(String[] args) {
-        String result = "";
-
-            try{
-                Connection conn=ConnectionJDBC.getConn();
-                Statement statement=conn.createStatement();
-                ResultSet rs= statement.executeQuery("select * from student" );
-                while (rs.next()) {
-                    result += rs.getString("rollNo");
-                    result += "\t";
-                    result += rs.getString("Name");
-                    result += "\t";
-                    result +=rs.getString("address");
-                    result += "\t";
-                    result += rs.getString("marks");
-                    result += "\t";
-                    result += rs.getString("gender");
-                    result += "\t";
-                    result += "\n";
-
-                }
-                System.out.println(result);
-                rs.close();
-                statement.close();
-                conn.close();
-            }catch(Exception e){
-            }
-    }
+//    public static void main(String[] args) {
+//        String result = "";
+//
+//            try{
+//                Connection conn=ConnectionJDBC.getConn();
+//                Statement statement=conn.createStatement();
+//                ResultSet rs= statement.executeQuery("select * from student" );
+//                while (rs.next()) {
+//                    result += rs.getString("rollNo");
+//                    result += "\t";
+//                    result += rs.getString("Name");
+//                    result += "\t";
+//                    result +=rs.getString("address");
+//                    result += "\t";
+//                    result += rs.getString("marks");
+//                    result += "\t";
+//                    result += rs.getString("gender");
+//                    result += "\t";
+//                    result += "\n";
+//
+//                }
+//                System.out.println(result);
+//                rs.close();
+//                statement.close();
+//                conn.close();
+//            }catch(Exception e){
+//            }
+//    }
     
     
 }

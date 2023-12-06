@@ -13,11 +13,11 @@ import javax.swing.JOptionPane;
  * @author Admin
  */
 public class Main extends javax.swing.JFrame {
-    public static Client client;
-    private int port = 6666;
     /**
      * Creates new form index
      */
+    public static Client client;
+
     public Main() {
         initComponents();
         client = new Client(6666);

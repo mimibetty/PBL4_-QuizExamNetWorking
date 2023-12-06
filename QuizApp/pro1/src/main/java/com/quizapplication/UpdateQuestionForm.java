@@ -8,6 +8,7 @@ package com.quizapplication;
  *
  * @author Admin
  */
+import Server.ConnectionJDBC;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

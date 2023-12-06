@@ -1,5 +1,6 @@
 package com.quizapplication;
 
+import Server.ConnectionJDBC;
 import java.sql.*;
 import java.util.List;
 import javax.swing.JFrame;
@@ -22,7 +23,8 @@ public class deleteQuestion extends javax.swing.JFrame {
      */
     public deleteQuestion() {
         initComponents();
-        resetID();
+        Main.client.ResetIDDelete();
+            
     }
 
     /**
@@ -257,7 +259,7 @@ public class deleteQuestion extends javax.swing.JFrame {
         } catch (Exception e) {
             JFrame jf = new JFrame();
             jf.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(jf, e);
+            JOptionPane.showMessageDialog(jf, e +"there resetid");
         }
     }
 
@@ -273,7 +275,7 @@ public class deleteQuestion extends javax.swing.JFrame {
         } catch (Exception e) {
             JFrame jf = new JFrame();
             jf.setAlwaysOnTop(true);
-            JOptionPane.showMessageDialog(jf, e);
+            JOptionPane.showMessageDialog(jf, e+ "update uuuuu");
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

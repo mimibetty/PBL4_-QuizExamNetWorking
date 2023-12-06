@@ -3,8 +3,13 @@ package com.quizapplication;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -13,142 +18,138 @@ import javax.swing.Timer;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Anh Nguyen
  */
 public class quizExamStudent extends javax.swing.JFrame {
 
-    public String questionId = "1";
+    String serverAddress = "localhost"; // Change this to your server's address
+    int serverPort = 12345; // Change this to your server's port number
+    public int questionId = 1;
     public String answer;
     public int min = 0;
     public int sec = 0;
     public int marks = 0;
-    public int NumberQuestion=0;
-    public int count=1;
-    
-    public void answerCheck(){
+    public int NumberQuestion = 0;
+    public int count = 1;
+
+    // Kiểm tra câu trả lời
+    // Dịch sang câu hỏi tiếp theo 
+    // !!! có vấn đề: Sẽ bị marks++ vô hạn nếu người dùng cố tình
+    // Solution: lưu vết toàn bộ câu hỏi và trả lời
+    // Gửi lên server 1 lần
+    public void answerCheck() {
         String studentAnswer = "";
-        if(jRadioButton1.isSelected()){
+        if (jRadioButton1.isSelected()) {
             studentAnswer = jRadioButton1.getText();
-            
-        }else if(jRadioButton2.isSelected()){
+
+        } else if (jRadioButton2.isSelected()) {
             studentAnswer = jRadioButton2.getText();
-            
-        }else if(jRadioButton3.isSelected()){
+
+        } else if (jRadioButton3.isSelected()) {
             studentAnswer = jRadioButton3.getText();
-            
-        }else if(jRadioButton4.isSelected()){
+
+        } else if (jRadioButton4.isSelected()) {
             studentAnswer = jRadioButton4.getText();
-            
+
         }
-        
-        if(studentAnswer.equals(answer)){
-            marks++;
-           jLabel18.setText(String.valueOf(marks));
-            
+
+        if (studentAnswer.equals(answer)) {
+            ++marks;
+            jLabel18.setText(String.valueOf(marks));
+
         }
-        int questionId1 = Integer.parseInt(questionId);
-        questionId1++;
-        questionId = String.valueOf(questionId1);
-        
+
+        questionId++;
+
         jRadioButton1.setSelected(false);
         jRadioButton2.setSelected(false);
         jRadioButton3.setSelected(false);
         jRadioButton4.setSelected(false);
-        
-        if(questionId.equals("10")){
+
+        if (questionId == 10) {
             jButton1.setVisible(false);
         }
     }
-    public void question(){
+
+    // Get Question by ID
+    public void question() {
         try{
-            Connection con = ConnectionJDBC.getConn();
-            Statement st = con.createStatement();
-            
-            ResultSet rsl = st.executeQuery("select * from question where id = '"+ questionId+"'");
-            while(rsl.next()){
-                jLabel16.setText(rsl.getString(1));
-                jLabel19.setText(rsl.getString(2));
-                jRadioButton1.setText(rsl.getString(3));
-                jRadioButton2.setText(rsl.getString(4));
-                jRadioButton3.setText(rsl.getString(5));
-                jRadioButton4.setText(rsl.getString(6));
-                answer = rsl.getString(7);
-                
-                
+            // Send a request to the server to get a question
+            String[] questionInfoes = QuizApplication.client.getQuestionByID(questionId);
+
+            // Read and process the response from the server
+            if (questionInfoes != null) {
+                // Update your GUI components with the received question
+                // Example: jLabel16.setText(response);
+                jLabel16.setText(String.valueOf(questionId));
+                jLabel19.setText(questionInfoes[0]);
+                jRadioButton1.setText(questionInfoes[1]);
+                jRadioButton2.setText(questionInfoes[2]);
+                jRadioButton3.setText(questionInfoes[3]);
+                jRadioButton4.setText(questionInfoes[4]);
+                answer = questionInfoes[5];
             }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, e);
+        } catch (Exception e) {
+            JFrame frame = new JFrame();
+            frame.setAlwaysOnTop(true);
+            JOptionPane.showMessageDialog(frame, e);
         }
     }
-    public void submit(){
-        String rollNo = jLabel10.getText();
+
+    // Kiểm tra đáp án câu hỏi cuối cùng 
+    public void submit() {
         answerCheck();
-        try{
-            Connection con = ConnectionJDBC.getConn();
-            Statement st = con.createStatement();
-            st.executeUpdate("update student set marks = '"+marks+"' where rollNo = '"+rollNo+"' ");
-            String marks1= String.valueOf(marks);
-            //JOptionPane.showMessageDialog(null, marks1);
-            setVisible(false);
-            new successfullySubmitted(marks1).setVisible(true);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, e);
-        }
+        QuizApplication.client.submitRequest(marks);
+        jLabel18.setText(String.valueOf(marks));
+        questionId++;
+        setVisible(false);
+        new successfullySubmitted(String.valueOf(marks)).setVisible(true);
     }
-    /**
-     * Creates new form quizExamStudent
-     */
-    Timer time; 
+    // Thêm hàm để gửi yêu cầu thông tin học sinh
+    private void requestStudentInfo() {
+        String[] StudentInfoes = QuizApplication.client.getStudentInfoByID(QuizApplication.client.ID_Account);
+        //MSSV
+        jLabel10.setText(StudentInfoes[1]);
+        //Name
+        jLabel12.setText(StudentInfoes[0]);
+        question();
+    }
+    
+    private void getNumberQuestion() {
+        int numberOfQuestions = QuizApplication.client.getQuestionNumber();
+        jLabel14.setText(String.valueOf(numberOfQuestions));
+        NumberQuestion = numberOfQuestions;
+    }
+    
+    Timer time;
+
     public quizExamStudent() {
         initComponents();
     }
-    public quizExamStudent(String rollNo) {
+
+    public quizExamStudent(String MSSV) {
         initComponents();
         getNumberQuestion();
-        jLabel10.setText(rollNo);
+        jLabel10.setText(MSSV);
         //date
         SimpleDateFormat dFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date();
         jLabel3.setText(dFormat.format(date));
-        
-        try{
-            Connection con = ConnectionJDBC.getConn();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("select * from student where rollNo= '" + rollNo+"'");
-            while(rs.next()){
-                jLabel12.setText(rs.getString(2));
-            }
-            
-            ResultSet rsl = st.executeQuery("select * from question where id = '"+ questionId+"'");
-            while(rsl.next()){
-                jLabel16.setText(rsl.getString(1));
-                jLabel19.setText(rsl.getString(2));
-                jRadioButton1.setText(rsl.getString(3));
-                jRadioButton2.setText(rsl.getString(4));
-                jRadioButton3.setText(rsl.getString(5));
-                jRadioButton4.setText(rsl.getString(6));
-                answer = rsl.getString(7);
-                
-                
-            }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, e);
-        }
-        
+        requestStudentInfo();
+
         setLocationRelativeTo(this);
-        time  = new Timer(1000, new ActionListener(){
+        time = new Timer(1000, new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 jLabel8.setText(String.valueOf(sec));
                 jLabel7.setText(String.valueOf(min));
-                
-                if(sec == 60){
+
+                if (sec == 60) {
                     sec = 0;
-                    min ++;
-                    if(min == 10){
+                    min++;
+                    if (min == 10) {
                         time.stop();
                         answerCheck();
                         submit();
@@ -159,22 +160,8 @@ public class quizExamStudent extends javax.swing.JFrame {
         });
         time.start();
     }
-    private void getNumberQuestion(){
-        try{
-             Connection con = ConnectionJDBC.getConn();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) as NumberQuestion FROM question;");
-            if(rs.next()){
-                jLabel14.setText(String.valueOf(rs.getInt("NumberQuestion")));
-                NumberQuestion=rs.getInt("NumberQuestion");
-            }
-            con.close();
-            st.close();
-            rs.close();
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -260,7 +247,7 @@ public class quizExamStudent extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(102, 255, 204));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jLabel9.setText("RollNumber:");
+        jLabel9.setText("MSSV");
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel10.setText("10000");
@@ -497,4 +484,5 @@ public class quizExamStudent extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     // End of variables declaration//GEN-END:variables
-}
+    
+} 
