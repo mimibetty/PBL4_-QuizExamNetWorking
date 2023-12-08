@@ -500,6 +500,27 @@ class ClientHandler implements Runnable {
         }
     }
     
+    public void UpdateErrorMouse(){
+        try {
+            System.out.println("WWhy not update");
+            
+            
+            String IDD_Account = in.readUTF();
+            String ErrorMouse = in.readUTF();
+            Connection conn = ConnectionJDBC.getConn();
+            Statement statement = conn.createStatement();
+            String updateQuery = "UPDATE result SET number_error = '" + ErrorMouse + "' WHERE ID_Account = '" + IDD_Account + "'";
+            int rowsAffected = statement.executeUpdate(updateQuery);
+            System.out.println("server + "  + updateQuery);
+            conn.close();
+        } 
+        catch (Exception e) {
+            
+            System.out.println("no ok nhe");
+            e.printStackTrace();
+        }
+    }
+    
     @Override
     public void run() {
         try {
@@ -560,6 +581,9 @@ class ClientHandler implements Runnable {
                     case "ResetIDDelete":
                         ResetIDDelete();
                         break;
+                    case "UpdateErrorMouse":
+                        UpdateErrorMouse();
+                        break;                        
                     default:
                         throw new AssertionError();
                 }

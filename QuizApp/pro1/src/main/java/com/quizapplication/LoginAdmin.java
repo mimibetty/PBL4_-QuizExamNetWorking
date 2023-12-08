@@ -122,7 +122,8 @@ public class LoginAdmin extends javax.swing.JFrame {
                         new AdminHome().setVisible(true);
                     }
                     else{
-                        new quizExamStudent(QuizApplication.client.MSSV).setVisible(true);
+                         new quizExamStudent(QuizApplication.client.MSSV).setVisible(true);
+                        
                     }            
                     this.setVisible(false);
 //                }

@@ -1,17 +1,28 @@
 package com.quizapplication;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimerTask;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import java.util.TimerTask;
 
 
 /*
@@ -33,6 +44,10 @@ public class quizExamStudent extends javax.swing.JFrame {
     public int marks = 0;
     public int NumberQuestion = 0;
     public int count = 1;
+    public int ErrorMouse = 0;
+    static final int timeTracking = 2000;
+    private MouseMotionListener mouseMotionListener;
+    private java.util.Timer mouseTracker;
 
     // Kiểm tra câu trả lời
     // Dịch sang câu hỏi tiếp theo 
@@ -124,11 +139,16 @@ public class quizExamStudent extends javax.swing.JFrame {
     }
     
     Timer time;
+    public void stopTrackingMouse() {
+        this.removeMouseMotionListener(mouseMotionListener);
+        mouseTracker.cancel(); // Stop the timer
 
+    }
+    
     public quizExamStudent() {
         initComponents();
     }
-
+    
     public quizExamStudent(String MSSV) {
         initComponents();
         getNumberQuestion();
@@ -159,7 +179,45 @@ public class quizExamStudent extends javax.swing.JFrame {
             }
         });
         time.start();
+        
+          // Add mouse tracking code here...
+//        Timer mouseTracker = new Timer();
+//        mouseTracker.schedule(new TimerTask() {
+         mouseTracker = new java.util.Timer();
+         mouseTracker.schedule(new java.util.TimerTask() {
+            @Override
+            public void run() {
+                PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+                Point pointInScreen = pointerInfo.getLocation();
+                Point pointInFrame = new Point(pointInScreen);
+                SwingUtilities.convertPointFromScreen(pointInFrame, quizExamStudent.this);
+                boolean isMouseInFrame = quizExamStudent.this.contains(pointInFrame);
+                boolean isFrameFocused = quizExamStudent.this.isFocused();
+                boolean isMouseOnTopOfFrame = isMouseInFrame && isFrameFocused;
+
+                System.out.println("Is mouse on top of frame: " + isMouseOnTopOfFrame);
+                if (isMouseOnTopOfFrame) {
+                    System.out.println("Mouse position in frame: " + pointInFrame);
+                }
+                else {
+                    ErrorMouse++;
+                    System.out.println("Mouse out off frame: " + ErrorMouse + " MY name   :  " +QuizApplication.client.ID_Account);
+                    Main.client.UpdateErrorMouse(QuizApplication.client.ID_Account ,ErrorMouse);
+                }
+                      
+            }
+        }, 0, timeTracking);
+        
+        
+        mouseMotionListener = new MouseAdapter() {
+        @Override
+            public void mouseMoved(MouseEvent e) {
+                System.out.println("Mouse position: " + e.getPoint());
+            }
+        };
+        this.addMouseMotionListener(mouseMotionListener);
     }
+    
 
     
     /**
@@ -399,6 +457,8 @@ public class quizExamStudent extends javax.swing.JFrame {
         // TODO add your handling code here:
         int a = JOptionPane.showConfirmDialog(null,"Do you really want to submit?", "Select",JOptionPane.YES_NO_OPTION);
         if(a == 0){
+            System.out.println("vao day roi ne");
+            stopTrackingMouse();
             answerCheck();
             submit();
         }

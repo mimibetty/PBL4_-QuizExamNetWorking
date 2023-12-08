@@ -45,6 +45,8 @@ public class Client {
     public void execute() {
         try {
             socket = new Socket("localhost", this.port);
+
+//            socket = new Socket("192.168.1.164", this.port);
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());
         } catch (Exception e) {
@@ -283,6 +285,16 @@ public class Client {
 //            System.out.println(Arrays.toString(data));
 //        }
 //    }
+    
+    public void UpdateErrorMouse(String id_account , int numberError){
+        String request = "UpdateErrorMouse";
+        try {
+            out.writeUTF(request);
+            out.writeUTF(id_account);
+            out.writeUTF(String.valueOf(numberError));
+        } catch (Exception e) {
+        }
+    }
     
    
     
